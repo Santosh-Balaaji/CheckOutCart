@@ -20,5 +20,13 @@ namespace ShoppingCart_Test
             var total = checkout.CalculateTotal();
             Assert.AreEqual(50, total);
         }
+
+        [Test]
+        public void CalculateTotal_GivenItemsAB_Return80()
+        {
+            var checkout = new Checkout("AB");
+            var total = checkout.CalculateTotal();
+            Assert.AreEqual(80, total);
+        }
     }
 }

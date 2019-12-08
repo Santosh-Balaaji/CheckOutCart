@@ -3,7 +3,8 @@
     internal class Checkout
     {
         private readonly string _items;
-        private const decimal PriceA = 50;
+        private const decimal UnitPriceB = 30;
+        private const decimal UnitPriceA = 50;
 
         public Checkout(string items)
         {
@@ -12,10 +13,16 @@
 
         public decimal CalculateTotal()
         {
-            if (_items == "A")
-                return PriceA;
-
-            return 0;   
+            decimal total = 0;
+            char[] item_arr = _items.ToCharArray();
+            foreach (var item in item_arr)
+            {
+                if (item == 'A')
+                    total += UnitPriceA;
+                else if (item == 'B')
+                    total += UnitPriceB;
+            }
+            return total;   
         }
     }
 }
