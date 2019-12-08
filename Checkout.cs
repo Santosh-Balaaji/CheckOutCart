@@ -1,16 +1,21 @@
-﻿using System;
-
-namespace ShoppingCart_Test
+﻿namespace ShoppingCart_Test
 {
     internal class Checkout
     {
-        public Checkout()
+        private readonly string _items;
+        private const decimal PriceA = 50;
+
+        public Checkout(string items)
         {
+            _items = items;
         }
 
         public decimal CalculateTotal()
         {
-            return 0;
+            if (_items == "A")
+                return PriceA;
+
+            return 0;   
         }
     }
 }
