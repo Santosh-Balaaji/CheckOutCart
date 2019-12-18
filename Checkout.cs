@@ -1,4 +1,6 @@
-﻿namespace ShoppingCart_Test
+﻿using System.Collections.Generic;
+
+namespace ShoppingCart_Test
 {
     internal class Checkout
     {
@@ -14,20 +16,36 @@
 
         public decimal CalculateTotal()
         {
-            int count_A = 0, count_B=0;
-            char[] item_arr = _items.ToCharArray();
-            foreach (var item in item_arr)
-            {
-                if (item == 'A')
-                { 
-                    count_A += 1;
-                }
-                else if (item == 'B')
-                    count_B +=1;
-            }
-            decimal total_priceA = ((count_A % 3) * UnitPriceA) + ((count_A / 3) * SpclPriceA)+ ((count_B % 2) * UnitPriceB) + ((count_B / 2) * SpclPriceB);
+            decimal totalPrice = 0;
+            var cart = GetItemCount(_items);
             
-            return total_priceA;   
+            foreach(var item in cart){
+                if (item.Key == 'A')
+                {
+                    totalPrice += ((item.Value % 3) * UnitPriceA) + ((item.Value / 3) * SpclPriceA);
+                }
+                else if (item.Key == 'B') {
+                    totalPrice += ((item.Value % 2) * UnitPriceB) + ((item.Value / 2) * SpclPriceB);
+                }
+            } 
+            
+            return totalPrice;   
+        }
+
+        public IDictionary<char, int> GetItemCount(string itemString)
+        {
+            var cart = new Dictionary<char, int>();
+            char[] items = itemString.ToCharArray();
+            foreach (var item in items)
+            {
+                if (cart.ContainsKey(item))
+                {
+                    cart[item] = cart[item] + 1;
+                }
+                else
+                    cart.Add(item, 1);
+            }
+            return cart;
         }
     }
 }
