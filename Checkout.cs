@@ -1,31 +1,35 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ShoppingCart_Test
 {
     internal class Checkout
     {
-        private readonly string _items;       
+        private readonly List<Product> _inventory;
         private const decimal UnitPriceB = 30;
         private const decimal UnitPriceA = 50;
         private const decimal SpclPriceA = 130;
         private const decimal SpclPriceB = 45;
-        public Checkout(string items)
+        private const decimal UnitPriceC = 20;
+        private readonly IDictionary<char, Product> _product_code_dict;
+        public Checkout(List<Product> Inventory)
         {
-            _items = items;
+            _inventory = Inventory;
+            _product_code_dict = _inventory.ToDictionary((item) => item.Code, (item) => item);
         }
 
-        public decimal CalculateTotal()
+        public decimal CalculateTotal(string items)
         {
             decimal totalPrice = 0;
-            var cart = GetItemCount(_items);
-            
-            foreach(var item in cart){
-                if (item.Key == 'A')
+            var numOfItemsPerCode = GetItemCount(items);
+            foreach (var item in numOfItemsPerCode) {
+                var productObject =_product_code_dict[item.Key];
+                if (productObject.DiscountPrice != 0)
                 {
-                    totalPrice += ((item.Value % 3) * UnitPriceA) + ((item.Value / 3) * SpclPriceA);
-                }
-                else if (item.Key == 'B') {
-                    totalPrice += ((item.Value % 2) * UnitPriceB) + ((item.Value / 2) * SpclPriceB);
+                    totalPrice += ((item.Value % productObject.DiscountCount) * productObject.UnitPrice) + ((item.Value / productObject.DiscountCount) * productObject.DiscountPrice);
+                } else
+                {
+                    totalPrice += item.Value * productObject.UnitPrice;
                 }
             } 
             
@@ -47,5 +51,16 @@ namespace ShoppingCart_Test
             }
             return cart;
         }
+
+        public IDictionary<char, Product> ReturnProductCodeToProductDict(List<Product> inventory)
+        {
+            var product_code_dict = new Dictionary<char, Product>();
+            foreach (var prodcut in inventory)
+            {
+                product_code_dict.Add(prodcut.Code, prodcut);
+            }
+            return product_code_dict;
+        }
+
     }
 }
