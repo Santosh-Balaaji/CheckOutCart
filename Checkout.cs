@@ -5,24 +5,25 @@ namespace ShoppingCart_Test
 {
     internal class Checkout
     {
-        private readonly List<Product> _inventory;
-        private const decimal UnitPriceB = 30;
-        private const decimal UnitPriceA = 50;
-        private const decimal SpclPriceA = 130;
-        private const decimal SpclPriceB = 45;
-        private const decimal UnitPriceC = 20;
+        private readonly List<Product> _productInventory;
+        private readonly List<Discount> _discountInventory;
+        private readonly List<FreePricing> _freepricingInventory;
+
         private readonly IDictionary<char, Product> _product_code_dict;
-        public Checkout(List<Product> Inventory)
+
+        public Checkout(List<Product> product_Inventory, List<Discount> discount_Inventory, List<FreePricing> freePricing_inventory )
         {
-            _inventory = Inventory;
-            _product_code_dict = _inventory.ToDictionary((item) => item.Code, (item) => item);
+            _productInventory = product_Inventory;
+            _discountInventory = discount_Inventory;
+            _freepricingInventory = freePricing_inventory;
+            _product_code_dict = _productInventory.ToDictionary((item) => item.Code, (item) => item);
         }
 
         public decimal CalculateTotal(string items)
         {
             decimal totalPrice = 0;
-            var numOfItemsPerCode = GetItemCount(items);
-            foreach (var item in numOfItemsPerCode) {
+           var numOfItemsPerCode = GetItemCount(items);
+            /*foreach (var item in numOfItemsPerCode) {
                 var productObject =_product_code_dict[item.Key];
                 if (productObject.DiscountPrice != 0)
                 {
@@ -31,7 +32,30 @@ namespace ShoppingCart_Test
                 {
                     totalPrice += item.Value * productObject.UnitPrice;
                 }
-            } 
+            }*/
+           
+           foreach (var product in _productInventory)
+           {
+               foreach (var discount in _discountInventory)
+               {
+                   if (!(product.Code == discount.Code))
+                       continue;
+                   if (!numOfItemsPerCode.ContainsKey(product.Code))
+                   {
+                       totalPrice += 0;
+                        continue;
+                    }
+
+                    if (discount.DiscountPrice != 0)
+                   {
+                       totalPrice += discount.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
+                   }
+                   else
+                   {
+                       totalPrice += product.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
+                   }
+               }
+           }
             
             return totalPrice;   
         }

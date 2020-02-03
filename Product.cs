@@ -1,18 +1,18 @@
 ﻿namespace ShoppingCart_Test
 {
-    internal class Product
+    internal class Product: IPricingStrategy
     {
-        public Product(char code, decimal unitPrice, int discountCount, decimal discountPrice)
+        public Product(char code, decimal unitPrice)
         {
             Code = code;
             UnitPrice = unitPrice;
-            DiscountCount = discountCount;
-            DiscountPrice = discountPrice;
         }
-
         public char Code { get; }
         public decimal UnitPrice { get; }
-        public int DiscountCount { get; }
-        public decimal DiscountPrice { get; }
+
+        public decimal CalculatePrice(decimal unitPrice, int quantity)
+        {
+            return (unitPrice * quantity);
+        }
     }
 }
