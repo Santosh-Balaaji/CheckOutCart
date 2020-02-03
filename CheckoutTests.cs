@@ -16,7 +16,6 @@ namespace ShoppingCart_Test
         
         private Discount DiscountA;
         private Discount DiscountB;
-        private Discount DiscountC;
 
         private FreePricing PricingA;
         private FreePricing PricingB;
@@ -48,10 +47,8 @@ namespace ShoppingCart_Test
 
             
             productC = new Product('C', 20);
-            DiscountC = new Discount('C',0,0);
             PricingC = new FreePricing('C', 3, 1);
             product_inventory.Add(productC);
-            Discount_inventory.Add(DiscountC);
             FreePricing_inventory.Add(PricingC);
 
         }

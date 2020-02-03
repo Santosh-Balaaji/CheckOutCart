@@ -21,41 +21,20 @@ namespace ShoppingCart_Test
 
         public decimal CalculateTotal(string items)
         {
-            decimal totalPrice = 0;
-           var numOfItemsPerCode = GetItemCount(items);
-            /*foreach (var item in numOfItemsPerCode) {
-                var productObject =_product_code_dict[item.Key];
-                if (productObject.DiscountPrice != 0)
+           decimal totalPrice = 0;
+           var numOfItemsPerCode = GetItemCount(items);           
+           foreach (var item in numOfItemsPerCode)
+            {
+                var product = _product_code_dict[item.Key];
+                var itemDiscount = _discountInventory.FirstOrDefault(dis => dis.Code == item.Key);
+                if (itemDiscount != null)
                 {
-                    totalPrice += ((item.Value % productObject.DiscountCount) * productObject.UnitPrice) + ((item.Value / productObject.DiscountCount) * productObject.DiscountPrice);
+                    totalPrice += itemDiscount.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
                 } else
                 {
-                    totalPrice += item.Value * productObject.UnitPrice;
+                    totalPrice += product.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
                 }
-            }*/
-           
-           foreach (var product in _productInventory)
-           {
-               foreach (var discount in _discountInventory)
-               {
-                   if (!(product.Code == discount.Code))
-                       continue;
-                   if (!numOfItemsPerCode.ContainsKey(product.Code))
-                   {
-                       totalPrice += 0;
-                        continue;
-                   }
-
-                    if (discount.DiscountPrice != 0)
-                    {
-                       totalPrice += discount.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
-                    }
-                    else
-                    {
-                       totalPrice += product.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
-                    }
-               }
-           }
+            }
             
             return totalPrice;   
         }
