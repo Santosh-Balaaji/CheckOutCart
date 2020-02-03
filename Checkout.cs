@@ -44,16 +44,16 @@ namespace ShoppingCart_Test
                    {
                        totalPrice += 0;
                         continue;
-                    }
+                   }
 
                     if (discount.DiscountPrice != 0)
-                   {
+                    {
                        totalPrice += discount.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
-                   }
-                   else
-                   {
+                    }
+                    else
+                    {
                        totalPrice += product.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
-                   }
+                    }
                }
            }
             
