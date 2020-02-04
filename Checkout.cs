@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ShoppingCart_Test
@@ -22,6 +23,8 @@ namespace ShoppingCart_Test
         public decimal CalculateTotal(string items)
         {
            decimal totalPrice = 0;
+            decimal discountPrice = 0;
+            decimal freePrice = 0;
            var numOfItemsPerCode = GetItemCount(items);           
            foreach (var item in numOfItemsPerCode)
             {
@@ -29,13 +32,20 @@ namespace ShoppingCart_Test
                 var itemDiscount = _discountInventory.FirstOrDefault(dis => dis.Code == item.Key);
                 if (itemDiscount != null)
                 {
-                    totalPrice += itemDiscount.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
+                    discountPrice += itemDiscount.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
                 } else
                 {
-                    totalPrice += product.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
+                    discountPrice += product.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
                 }
+                var itemFree = _freepricingInventory.FirstOrDefault(dis => dis.Code == item.Key);
+                if (itemFree != null)
+                {
+                    freePrice += itemFree.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
+                }
+                else
+                    freePrice += product.CalculatePrice(product.UnitPrice, numOfItemsPerCode[product.Code]);
             }
-            
+            totalPrice =Math.Min(discountPrice, freePrice);
             return totalPrice;   
         }
 

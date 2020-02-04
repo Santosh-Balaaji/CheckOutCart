@@ -79,11 +79,11 @@ namespace ShoppingCart_Test
             Assert.AreEqual(80, total);
         }
         [Test]
-        public void CalculateTotal_GivenItemsAAA_Return130()
+        public void CalculateTotal_GivenItemsAAA_Return100()
         {
             var checkout = new Checkout(product_inventory, Discount_inventory, FreePricing_inventory);
             var total = checkout.CalculateTotal("AAA");
-            Assert.AreEqual(130, total);
+            Assert.AreEqual(100, total);
         }
         [Test]
         public void CalculateTotal_GivenItemsABC_Return100()
